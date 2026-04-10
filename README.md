@@ -1,5 +1,7 @@
 # python-module-boilerplate
 
+[![CI](https://github.com/radiovisual/python-module-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/radiovisual/python-module-boilerplate/actions/workflows/ci.yml)
+
 > My nifty Python module
 
 A minimal template for kickstarting a Python package. Opinionated defaults for
@@ -48,8 +50,10 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 make install
 ```
 
-A `Makefile` wraps the common commands — run `make help` to see them all. The
-raw commands are shown below in case you prefer to invoke the tools directly.
+A `Makefile` wraps the common commands so you don't have to remember each tool's
+flags — run `make help` to see every target. Each section below shows the
+`make` shortcut alongside the raw command it runs, in case you prefer to invoke
+the tools directly.
 
 ### Install the git hooks
 
@@ -57,6 +61,8 @@ This uses the [`pre-commit`](https://pre-commit.com/) framework to wire up both
 `pre-commit` (lint) and `pre-push` (tests) hooks:
 
 ```sh
+make hooks
+# same as:
 pre-commit install
 ```
 
@@ -65,6 +71,8 @@ Now `ruff` will run before every commit and `pytest` will run before every push.
 ### Lint
 
 ```sh
+make lint
+# same as:
 ruff check .
 ruff format --check .
 ```
@@ -72,6 +80,8 @@ ruff format --check .
 To auto-fix:
 
 ```sh
+make format
+# same as:
 ruff check --fix .
 ruff format .
 ```
@@ -79,19 +89,31 @@ ruff format .
 ### Type check
 
 ```sh
+make typecheck
+# same as:
 mypy
 ```
 
 ### Test
 
 ```sh
+make test
+# same as:
 pytest
 ```
 
 Tests run with coverage enabled by default; a terminal report is printed after
 every run.
 
-### Run all hooks manually
+### Run everything CI runs
+
+```sh
+make check
+# same as:
+ruff check . && ruff format --check . && mypy && pytest
+```
+
+### Run all pre-commit hooks manually
 
 ```sh
 pre-commit run --all-files
