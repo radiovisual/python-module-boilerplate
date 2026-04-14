@@ -5,10 +5,10 @@ build-backend = "hatchling.build"
 [project]
 name = "python-module-boilerplate"
 version = "0.0.0"
-description = "My nifty Python module"
+description = "My nifty module boilerplate"
 readme = "README.md"
 license = { file = "LICENSE" }
-authors = [{ name = "Your Name", email = "you@example.com" }]
+authors = [{ name = "Michael Wuergler", email = "wuergler@gmail.com" }]
 requires-python = ">=3.9"
 keywords = ["boilerplate", "template"]
 classifiers = [
@@ -28,8 +28,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-username/python-module-boilerplate"
-Issues = "https://github.com/your-username/python-module-boilerplate/issues"
+Homepage = "https://github.com/radiovisual/python-module-boilerplate"
+Issues = "https://github.com/radiovisual/python-module-boilerplate/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/python_module_boilerplate"]

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/radiovisual/python-module-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/radiovisual/python-module-boilerplate/actions/workflows/ci.yml)
 
-> My nifty Python module
+> My nifty module boilerplate
 
 A minimal template for kickstarting a Python package. Opinionated defaults for
 `src/` layout, `pyproject.toml`, `ruff` linting, `pytest` testing, pre-commit
@@ -150,4 +150,4 @@ twine upload dist/*
 
 ## License
 
-MIT © [Your Name](https://example.com)
+MIT © [Michael Wuergler](https://github.com/radiovisual)
