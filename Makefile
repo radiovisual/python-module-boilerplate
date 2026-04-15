@@ -1,9 +1,38 @@
-.PHONY: help init eject install hooks lint format typecheck test check clean
+# ------------------------------------------------------------------------------
+# Venv-agnostic Makefile
+#
+# Every target runs tools via .venv/bin/... directly, so you do NOT need to
+# `source .venv/bin/activate` before running `make test`, `make check`, etc.
+# The `venv` target bootstraps .venv on first use, so a fresh clone just needs:
+#
+#     make venv && make install
+#
+# ...and from then on `make <anything>` uses the project venv automatically.
+#
+# Note: because make targets don't activate the venv in your parent shell, you
+# won't see the `(.venv)` prompt indicator when running make. The tools are
+# still using the venv — it's just invisible. If you want the indicator (or an
+# interactive python/pytest session), activate manually with:
+#
+#     source .venv/bin/activate
+# ------------------------------------------------------------------------------
+
+.PHONY: help venv init eject install hooks lint format typecheck test check clean
 
 PYTHON ?= python3
+VENV    := .venv
+VENV_BIN := $(VENV)/bin
+
+# Tools resolved from the venv so targets never depend on shell activation.
+VENV_PYTHON := $(VENV_BIN)/python
+RUFF        := $(VENV_BIN)/ruff
+MYPY        := $(VENV_BIN)/mypy
+PYTEST      := $(VENV_BIN)/pytest
+PRE_COMMIT  := $(VENV_BIN)/pre-commit
 
 help:
 	@echo "Targets:"
+	@echo "  venv       Create .venv if it doesn't exist (run this first on a fresh clone)"
 	@echo "  init       Interactively customize the boilerplate (name, email, etc.)"
 	@echo "  eject      Remove boilerplate-only machinery (this script, init target)"
 	@echo "  install    Install the package in editable mode with dev extras"
@@ -15,31 +44,39 @@ help:
 	@echo "  check      Run lint, typecheck, and test (what CI runs)"
 	@echo "  clean      Remove build artifacts and caches"
 
+# Bootstraps .venv on demand. Other targets depend on $(VENV_PYTHON), so the
+# venv is auto-created the first time you run make test / make check / etc.
+venv: $(VENV_PYTHON)
+
+$(VENV_PYTHON):
+	$(PYTHON) -m venv $(VENV)
+	$(VENV_PYTHON) -m pip install --upgrade pip
+
 init:
 	$(PYTHON) scripts/init_boilerplate.py $(ARGS)
 
 eject:
 	$(PYTHON) scripts/eject.py $(ARGS)
 
-install:
-	$(PYTHON) -m pip install -e ".[dev]"
+install: $(VENV_PYTHON)
+	$(VENV_PYTHON) -m pip install -e ".[dev]"
 
-hooks:
-	pre-commit install
+hooks: $(VENV_PYTHON)
+	$(PRE_COMMIT) install
 
-lint:
-	ruff check .
-	ruff format --check .
+lint: $(VENV_PYTHON)
+	$(RUFF) check .
+	$(RUFF) format --check .
 
-format:
-	ruff check --fix .
-	ruff format .
+format: $(VENV_PYTHON)
+	$(RUFF) check --fix .
+	$(RUFF) format .
 
-typecheck:
-	mypy
+typecheck: $(VENV_PYTHON)
+	$(MYPY)
 
-test:
-	pytest
+test: $(VENV_PYTHON)
+	$(PYTEST)
 
 check: lint typecheck test
 
